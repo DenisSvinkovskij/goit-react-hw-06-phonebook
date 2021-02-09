@@ -5,30 +5,38 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { connect } from 'react-redux';
 import { deleteContact } from '../../redux/phonebook/phonebook-actions';
 
-function ContactList({
-  contacts = [{ name: 'John', number: '555 - 452 - 521', id: 'dfv5' }],
-  onDeleteContact,
-}) {
+function ContactList({ contacts, onDeleteContact }) {
   return (
     <TransitionGroup component="ul" className={s.list}>
-      {contacts.map(({ name, number, id }) => {
-        return (
-          <CSSTransition key={id} appear={true} timeout={250} classNames={s}>
-            <li className={s.listItem}>
-              <span>
-                {name}: {number}
-              </span>
-              <button
-                type="button"
-                className={s.button}
-                onClick={() => onDeleteContact(id)}
-              >
-                Delete contact
-              </button>
-            </li>
-          </CSSTransition>
-        );
-      })}
+      {contacts.length === 0 ? (
+        <CSSTransition
+          key={1}
+          timeout={700}
+          classNames="message-empty"
+          unmountOnExit
+        >
+          <li>Contact list empty for now</li>
+        </CSSTransition>
+      ) : (
+        contacts.map(({ name, number, id }) => {
+          return (
+            <CSSTransition key={id} appear={true} timeout={250} classNames={s}>
+              <li className={s.listItem}>
+                <span>
+                  {name}: {number}
+                </span>
+                <button
+                  type="button"
+                  className={s.button}
+                  onClick={() => onDeleteContact(id)}
+                >
+                  Delete contact
+                </button>
+              </li>
+            </CSSTransition>
+          );
+        })
+      )}
     </TransitionGroup>
   );
 }
